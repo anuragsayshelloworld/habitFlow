@@ -117,6 +117,43 @@ app.delete('/api/deleteitem', async (req, res) => {
 });
 
 
+app.put('/api/updateitem', async (req, res) => {
+  try {
+    const { id, habitname, habitdesc } = req.body;
+    console.log("Incoming update payload:", { id, habitname, habitdesc });
+
+    if (!id || habitname === undefined || habitdesc === undefined) {
+      return res.status(400).json({ message: 'All fields are required.' });
+    }
+
+    const updateQuery = `
+      UPDATE habits
+      SET habitName = ?, habitDescription = ?
+      WHERE id = ?
+    `;
+
+    const [result] = await db.execute(updateQuery, [habitname, habitdesc, id]);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: 'Habit not found.' });
+    }
+
+    
+    const [updatedHabits] = await db.execute('SELECT * FROM habits');
+
+    res.json({
+      success: true,
+      message: 'Habit updated successfully.',
+      habits: updatedHabits, 
+    });
+  } catch (error) {
+    console.error('Error updating habit:', error);
+    res.status(500).json({ message: 'Internal server error.' });
+  }
+});
+
+
+
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });

@@ -1,25 +1,24 @@
 import {useHabit} from '../contexts/HabitContext';
 
 export default function HabitCreater(){
-    const {addHabit} = useHabit();
+    const {addHabit, habitdesc, sethabitdesc, sethabitname, habitname, edit, Update} = useHabit();
     const handleSubmit = (e) => {
-  e.preventDefault();
-  const form = e.target;
-
-  const newHabit = {
-    habitName: form.habitName.value,
-    habitDescription: form.habitDescription.value,
+    e.preventDefault();
+     
+    const newHabit = {
+    habitName: habitname,
+    habitDescription: habitdesc,
     habitStreak: 0
-  };
+    };
 
-  addHabit(newHabit); 
-  form.reset();
-};
-
-    return <form onSubmit={handleSubmit}>
-  <input type="text" name="habitName" placeholder="habit name" required />
-  <textarea name="habitDescription" placeholder="description" required></textarea>
-  <button type="submit">Add</button>
-</form>
-
+    addHabit(newHabit); 
+    sethabitname('');
+    sethabitdesc('');
+    };
+    
+    return <form onSubmit={edit ? Update : handleSubmit}>
+    <input type="text" placeholder="habit name" value={habitname} onChange={(e)=>sethabitname(e.target.value)} required />
+    <textarea placeholder="description" value={habitdesc} onChange={(e)=>sethabitdesc(e.target.value)} required></textarea>
+    <button type="submit">{edit ? 'Update': 'Add'}</button>
+    </form>
 }

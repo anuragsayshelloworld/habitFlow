@@ -27,3 +27,13 @@ export const deletehabit = async (id) => {
     body: JSON.stringify({ id })  // Correct serialization
   });
 };
+
+export const updateapi = async (id, habitname, habitdesc) =>{
+  await fetch('http://localhost:5000/api/updateitem', {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({id, habitname, habitdesc})
+  })
+}
