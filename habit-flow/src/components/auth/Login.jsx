@@ -1,26 +1,30 @@
 import { useAuth } from '../../contexts/AuthContext';
 import { useState } from 'react';
 export default function Login(){
-    const {login} = useAuth();
+    const {login, errorText, setErrorText} = useAuth();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [isLoading,setIsLoading] = useState(false);
 
     const handleSubmit = async (e) =>{
         e.preventDefault();
-        setIsLoading(true);
+        if(!email || !password){
+        setErrorText('Empty input Fields');
+        }
+        else{
+        setIsLoading(true);    
         try{
             await login(email, password);
-            // login function in context handles user state and redirect
         }
         catch(error){
             console.error('Login failed:', error);
         }
         finally {
             setIsLoading(false);
-        }
+        }}
     }
     return <>
+           {errorText}
            <form onSubmit={handleSubmit}>
             <input type='text' value={email} onChange={(e)=>setEmail(e.target.value)}/>
             <input type='password' value={password} onChange={(e)=>setPassword(e.target.value)}/>

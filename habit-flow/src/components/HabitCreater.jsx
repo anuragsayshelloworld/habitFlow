@@ -12,7 +12,7 @@ export default function HabitCreater(){
     habitStreak: 0
   };
 
-  addHabit(newHabit); // ✅ send full object
+  addHabit(newHabit); 
   form.reset();
 };
 

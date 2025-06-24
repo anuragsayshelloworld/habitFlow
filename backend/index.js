@@ -84,6 +84,39 @@ app.post('/api/addhabit/', async (req, res) => {
 });
 
 
+app.get('/api/habitList', async (req, res) => {
+  try {
+    if (!db) {
+      return res.status(500).json({ success: false, message: "Database not initialized" });
+    }
+
+    const [rows] = await db.execute('SELECT * FROM habits');
+
+    res.json({ success: true, habits: rows });
+  } catch (error) {
+    console.error('Error fetching habit list:', error);
+    res.status(500).json({ success: false, message: 'Server error fetching habits' });
+  }
+});
+
+app.delete('/api/deleteitem', async (req, res) => {
+  try {
+    const { id } = req.body;
+
+    if (!id) {
+      return res.status(400).json({ message: 'Habit ID is required' });
+    }
+
+    await db.execute('DELETE FROM habits WHERE id = ?', [id]);
+
+    res.json({ success: true, message: 'Habit deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting habit:', error);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
+
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
